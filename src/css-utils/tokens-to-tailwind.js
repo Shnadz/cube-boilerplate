@@ -1,4 +1,4 @@
-const slugify = require('slugify');
+import slugify from 'slugify'
 
 /**
  * Converts human readable tokens into tailwind config friendly ones
@@ -6,7 +6,7 @@ const slugify = require('slugify');
  * @param {array} tokens {name: string, value: any}
  * @return {object} {key, value}
  */
-const tokensToTailwind = tokens => {
+export const tokensToTailwind = tokens => {
   const nameSlug = text => slugify(text, {lower: true});
   let response = {};
 
@@ -17,4 +17,4 @@ const tokensToTailwind = tokens => {
   return response;
 };
 
-module.exports = tokensToTailwind;
+
