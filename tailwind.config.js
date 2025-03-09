@@ -1,20 +1,18 @@
-const plugin = require('tailwindcss/plugin');
-const postcss = require('postcss');
-const postcssJs = require('postcss-js');
+import plugin from 'tailwindcss/plugin';
+import postcss from 'postcss';
+import postcssJs from 'postcss-js';
 
-const clampGenerator = require('./src/css-utils/clamp-generator.js');
-const tokensToTailwind = require('./src/css-utils/tokens-to-tailwind.js');
+import clampGenerator from './src/css-utils/clamp-generator.js';
+import tokensToTailwind from './src/css-utils/tokens-to-tailwind.js';
 
-// Raw design tokens
-const colorTokens = require('./src/design-tokens/colors.json');
-const fontTokens = require('./src/design-tokens/fonts.json');
-const spacingTokens = require('./src/design-tokens/spacing.json');
-const textSizeTokens = require('./src/design-tokens/text-sizes.json');
-const textLeadingTokens = require('./src/design-tokens/text-leading.json');
-const textWeightTokens = require('./src/design-tokens/text-weights.json');
-const viewportTokens = require('./src/design-tokens/viewports.json');
+import colorTokens from './src/design-tokens/colors.json';
+import fontTokens from './src/design-tokens/fonts.json';
+import spacingTokens from './src/design-tokens/spacing.json';
+import textSizeTokens from './src/design-tokens/text-sizes.json';
+import textLeadingTokens from './src/design-tokens/text-leading.json';
+import textWeightTokens from './src/design-tokens/text-weights.json';
+import viewportTokens from './src/design-tokens/viewports.json';
 
-// Process design tokens
 const colors = tokensToTailwind(colorTokens.items);
 const fontFamily = tokensToTailwind(fontTokens.items);
 const fontWeight = tokensToTailwind(textWeightTokens.items);
@@ -22,9 +20,8 @@ const fontSize = tokensToTailwind(clampGenerator(textSizeTokens.items));
 const lineHeight = tokensToTailwind(textLeadingTokens.items);
 const spacing = tokensToTailwind(clampGenerator(spacingTokens.items));
 
-module.exports = {
+export default {
   content: ['./src/**/*.{html,js,jsx,mdx,njk,twig,vue}'],
-  // Add color classes to safe list so they are always generated
   safelist: [],
   presets: [],
   theme: {
@@ -48,43 +45,20 @@ module.exports = {
     padding: ({theme}) => theme('spacing')
   },
   variantOrder: [
-    'first',
-    'last',
-    'odd',
-    'even',
-    'visited',
-    'checked',
-    'empty',
-    'read-only',
-    'group-hover',
-    'group-focus',
-    'focus-within',
-    'hover',
-    'focus',
-    'focus-visible',
-    'active',
-    'disabled'
+    'first', 'last', 'odd', 'even', 'visited', 'checked', 'empty', 'read-only', 'group-hover', 'group-focus', 'focus-within', 'hover', 'focus', 'focus-visible', 'active', 'disabled'
   ],
-
-  // Disables Tailwind's reset and usage of rgb/opacity
   corePlugins: {
     preflight: false,
     textOpacity: false,
     backgroundOpacity: false,
     borderOpacity: false
   },
-
-  // Prevents Tailwind's core components
   blocklist: ['container'],
-
-  // Prevents Tailwind from generating that wall of empty custom properties 
   experimental: {
     optimizeUniversalDefaults: true
   },
-
   plugins: [
-    // Generates custom property values from tailwind config
-    plugin(function ({addComponents, config}) {
+    plugin(({addComponents, config}) => {
       let result = '';
 
       const currentConfig = config();
@@ -114,9 +88,7 @@ module.exports = {
         ':root': postcssJs.objectify(postcss.parse(result))
       });
     }),
-
-    // Generates custom utility classes
-    plugin(function ({addUtilities, config}) {
+    plugin(({addUtilities, config}) => {
       const currentConfig = config();
       const customUtilities = [
         {key: 'spacing', prefix: 'flow-space', property: '--flow-space'},
